@@ -1,11 +1,11 @@
-### PocketSpells (working title)
+# PocketSpells (working title)
 
 
 ## The problem
 
 My friend Amalie and I play DnD with friends. Amalie really likes to track her character on paper. But, to keep track of spells can be a hassle. To remember which spells you have and what they do. 
 
-# Whet wlse we tried
+### Whet wlse we tried
 We tried printing them on cards. This worked well, but we would always forget to print new ones when the learned something new and she had a hard when she needed to chose new spells.
 
 ## The solution

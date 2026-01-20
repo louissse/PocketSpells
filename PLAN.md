@@ -39,7 +39,7 @@ Amalie plays a ranger. This is NOT a class with a large amount of spells. She st
 - React with TypeScript for user interactions
 - React aria for standard components
 - Vite for build
-- Tailwind or scoped CSS?
+- Tailwind for styling
 - For phase one I will not be using Tanstack Query, as it would be overkill. I only fetch data when the app loads.
 - Will use Tanstack Router if neccesary for routing  
 - Data: Spell data will come from https://5e-bits.github.io/docs/. (All spells here are in the SRD, and can be used under the The Open Game License (OGL))

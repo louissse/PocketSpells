@@ -1,13 +1,14 @@
-import js from '@eslint/js'
-import globals from 'globals'
-import reactHooks from 'eslint-plugin-react-hooks'
-import reactRefresh from 'eslint-plugin-react-refresh'
-import reactPlugin from 'eslint-plugin-react'
-import tseslint from 'typescript-eslint'
-import prettier from 'eslint-config-prettier'
+import js from "@eslint/js";
+import globals from "globals";
+import reactHooks from "eslint-plugin-react-hooks";
+import reactRefresh from "eslint-plugin-react-refresh";
+import reactPlugin from "eslint-plugin-react";
+import tseslint from "typescript-eslint";
+import prettier from "eslint-config-prettier";
+import pluginQuery from "@tanstack/eslint-plugin-query";
 
 export default [
-  { ignores: ['dist'] },
+  { ignores: ["dist"] },
   js.configs.recommended,
   {
     ...reactPlugin.configs.flat.recommended,
@@ -18,17 +19,18 @@ export default [
     },
   },
   reactPlugin.configs.flat["jsx-runtime"],
+  ...pluginQuery.configs["flat/recommended"],
   ...tseslint.configs.recommended,
   {
-    files: ['**/*.{ts,tsx}'],
+    files: ["**/*.{ts,tsx}"],
     plugins: {
-      'react-hooks': reactHooks,
-      'react-refresh': reactRefresh,
+      "react-hooks": reactHooks,
+      "react-refresh": reactRefresh,
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
-      'react-refresh/only-export-components': [
-        'warn',
+      "react-refresh/only-export-components": [
+        "warn",
         { allowConstantExport: true },
       ],
       "react/no-unescaped-entities": "off",
@@ -45,4 +47,4 @@ export default [
     },
   },
   prettier,
-]
+];

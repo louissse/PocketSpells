@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import type { Spell, SpellDetail } from "../types/spell";
 
-export function useSpells() {
+export function useSpells(spellsToLoad: number) {
   const [spells, setSpells] = useState<Spell[]>([]);
   const [spellDetails, setSpellDetails] = useState<SpellDetail[]>([]);
   const [loading, setLoading] = useState(true);
@@ -15,7 +15,7 @@ export function useSpells() {
 
   async function fetchSpellDetails(i: number, spellsList: Spell[]) {
     setLoading(true);
-    const spellsToFetch = spellsList.slice(i - 10, i);
+    const spellsToFetch = spellsList.slice(i - spellsToLoad, i);
     const spellDetailsPromises = spellsToFetch.map(async (spell: Spell) => {
       const detailRes = await fetch(
         `https://www.dnd5eapi.co/api/2014/spells/${spell.index}`,
@@ -31,7 +31,7 @@ export function useSpells() {
   useEffect(() => {
     async function initializeSpells() {
       const spellsList = await fetchSpells();
-      await fetchSpellDetails(10, spellsList);
+      await fetchSpellDetails(spellsToLoad, spellsList);
     }
     initializeSpells();
   }, []);

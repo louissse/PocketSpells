@@ -1,28 +1,31 @@
 import { useState } from "react";
-import { useSpells } from "../hooks/useSpells";
+import { useSpellsList } from "../hooks/useSpellsList";
+import { useSpellDetails } from "../hooks/useSpellDetails";
 
 const spellsToLoad = 20;
 
 export default function SpellsList() {
-  const { spells, spellDetails, loading, fetchSpellDetails } =
-    useSpells(spellsToLoad);
+  const { spells, loading: spellsLoading } = useSpellsList();
   const [index, setIndex] = useState(spellsToLoad);
+  const { spellDetails, loading: detailsLoading } = useSpellDetails(
+    spells,
+    index,
+    spellsToLoad,
+  );
 
-  async function handleNext() {
+  function handleNext() {
     if (index < spells.length) {
-      const newIndex = index + spellsToLoad;
-      setIndex(newIndex);
-      await fetchSpellDetails(newIndex, spells);
+      setIndex(index + spellsToLoad);
     }
   }
 
-  async function handlePrevious() {
+  function handlePrevious() {
     if (index > spellsToLoad) {
-      const newIndex = index - spellsToLoad;
-      setIndex(newIndex);
-      await fetchSpellDetails(newIndex, spells);
+      setIndex(index - spellsToLoad);
     }
   }
+
+  const loading = spellsLoading || detailsLoading;
 
   return (
     <div className="min-h-84">

@@ -3,20 +3,14 @@ import SchoolIcon from "./ui/SchoolIcon";
 
 export default function SpellCard(spell: SpellDetail) {
   return (
-    <div
-      className="p-2 bg-linear-to-b from-rose-50 to-slate-100 border border-slate-900/30 rounded shadow-xs min-h-20 flex flex-col justify-between
-"
-    >
-      <div className="flex gap-2 items-center justify-between">
-        <p className="font-semibold flex items-center gap-1">
+    <div className="flex min-h-20 flex-col justify-between rounded border border-slate-900/30 bg-linear-to-b from-rose-50 to-slate-100 p-2 shadow-xs">
+      <div className="flex items-center justify-between gap-2">
+        <p className="flex items-center gap-1 font-semibold">
           <SchoolIcon size={18} school={spell.school.index} />
           {spell.name}
         </p>
 
-        <div
-          className="w-5 h-5 rounded-full bg-linear-to-br from-slate-700 to-gray-900 flex items-center justify-center
-"
-        >
+        <div className="flex h-5 w-5 items-center justify-center rounded-full bg-linear-to-br from-slate-700 to-gray-900">
           <p className="text-xs font-bold text-white">{spell.level}</p>
         </div>
       </div>

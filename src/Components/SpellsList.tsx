@@ -31,7 +31,7 @@ export default function SpellsList() {
   const loading = spellsLoading || detailsLoading;
 
   return (
-    <div className="min-h-84">
+    <div className="min-h-84 p-6">
       {!loading ? (
         <div>
           <h2>
@@ -76,7 +76,7 @@ export default function SpellsList() {
               <ToggleGroupItem value="9">9th</ToggleGroupItem>
             </ToggleGroup>
           </div>
-          <ul className="p-6 flex gap-2 flex-col">
+          <ul className="flex flex-col gap-2 py-6">
             {spellDetails.map((spell) => (
               <li key={spell.index}>
                 <SpellCard {...spell} />

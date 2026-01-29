@@ -1,12 +1,15 @@
 import { useState } from "react";
 import { useSpellsList } from "../hooks/useSpellsList";
 import { useSpellDetails } from "../hooks/useSpellDetails";
+import SpellCard from "./SpellCard";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
 const spellsToLoad = 20;
 
 export default function SpellsList() {
-  const { spells, loading: spellsLoading } = useSpellsList();
   const [index, setIndex] = useState(spellsToLoad);
+  const [levelSelect, setLevelSelect] = useState([]);
+  const { spells, loading: spellsLoading } = useSpellsList(levelSelect);
   const { spellDetails, loading: detailsLoading } = useSpellDetails(
     spells,
     index,
@@ -51,9 +54,33 @@ export default function SpellsList() {
               Next {spellsToLoad}
             </button>
           </div>
-          <ul className="">
+          <div className="flex flex-col items-center">
+            <ToggleGroup
+              type="multiple"
+              variant="outline"
+              value={levelSelect}
+              onValueChange={setLevelSelect}
+              className="flex flex-wrap justify-center"
+              size="s"
+              spacing={2}
+            >
+              <ToggleGroupItem value="0">Cantrip</ToggleGroupItem>
+              <ToggleGroupItem value="1">1st</ToggleGroupItem>
+              <ToggleGroupItem value="2">2nd</ToggleGroupItem>
+              <ToggleGroupItem value="3">3rd</ToggleGroupItem>
+              <ToggleGroupItem value="4">4th</ToggleGroupItem>
+              <ToggleGroupItem value="5">5th</ToggleGroupItem>
+              <ToggleGroupItem value="6">6th</ToggleGroupItem>
+              <ToggleGroupItem value="7">7th</ToggleGroupItem>
+              <ToggleGroupItem value="8">8th</ToggleGroupItem>
+              <ToggleGroupItem value="9">9th</ToggleGroupItem>
+            </ToggleGroup>
+          </div>
+          <ul className="p-6 flex gap-2 flex-col">
             {spellDetails.map((spell) => (
-              <li key={spell.index}>{spell.name}</li>
+              <li key={spell.index}>
+                <SpellCard {...spell} />
+              </li>
             ))}
           </ul>
         </div>

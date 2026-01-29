@@ -23,7 +23,7 @@ export function useSpellDetails(
     queryKey: ["spellDetails", startIndex, count, spellsToFetch],
     queryFn: () => fetchSpellDetails(spellsToFetch),
     enabled: spells.length > 0,
-    staleTime: 24 * 60 * 60 * 1000, // 5 minutes
+    staleTime: 24 * 60 * 60 * 1000,
   });
 
   return { spellDetails, loading };

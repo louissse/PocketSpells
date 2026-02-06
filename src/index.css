@@ -47,6 +47,16 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+
+  /* School of Magic Colors */
+  --school-abjuration: oklch(0.578 0.147 197.138); /* text-cyan-600 */
+  --school-conjuration: oklch(0.502 0.196 293.4); /* text-violet-700 */
+  --school-divination: oklch(0.436 0.097 230.018); /* text-sky-800 */
+  --school-enchantment: oklch(0.627 0.265 303.9); /* text-fuchsia-600 */
+  --school-evocation: oklch(0.695 0.203 70.081); /* text-orange-500 */
+  --school-illusion: oklch(0.522 0.194 25.331); /* text-red-700 */
+  --school-necromancy: oklch(0.145 0 0); /* text-zinc-900 */
+  --school-transmutation: oklch(0.696 0.17 162.48); /* text-lime-600 */
 }
 
 @theme inline {
@@ -88,6 +98,16 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+
+  /* School of Magic Colors */
+  --color-school-abjuration: var(--school-abjuration);
+  --color-school-conjuration: var(--school-conjuration);
+  --color-school-divination: var(--school-divination);
+  --color-school-enchantment: var(--school-enchantment);
+  --color-school-evocation: var(--school-evocation);
+  --color-school-illusion: var(--school-illusion);
+  --color-school-necromancy: var(--school-necromancy);
+  --color-school-transmutation: var(--school-transmutation);
 }
 
 .dark {
@@ -122,6 +142,28 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+
+  /* School of Magic Colors - Dark Mode */
+  --school-abjuration: oklch(
+    0.678 0.147 197.138
+  ); /* Lighter cyan for dark mode */
+  --school-conjuration: oklch(
+    0.602 0.196 293.4
+  ); /* Lighter violet for dark mode */
+  --school-divination: oklch(
+    0.536 0.097 230.018
+  ); /* Lighter sky for dark mode */
+  --school-enchantment: oklch(
+    0.727 0.265 303.9
+  ); /* Lighter fuchsia for dark mode */
+  --school-evocation: oklch(
+    0.795 0.203 70.081
+  ); /* Lighter orange for dark mode */
+  --school-illusion: oklch(0.622 0.194 25.331); /* Lighter red for dark mode */
+  --school-necromancy: oklch(0.8 0 0); /* Light gray for dark mode */
+  --school-transmutation: oklch(
+    0.796 0.17 162.48
+  ); /* Lighter lime for dark mode */
 }
 
 @layer base {

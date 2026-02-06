@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import type { Spell } from "../types/spell";
 
-export function useSpellsList(levelSelect = []) {
+export function useSpellsList(levelSelect = [], classSelect = []) {
   const [spells, setSpells] = useState<Spell[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -10,12 +10,19 @@ export function useSpellsList(levelSelect = []) {
       setLoading(true);
 
       let url = "https://www.dnd5eapi.co/api/2014/spells";
-
+      //make url for level
       if (levelSelect.length > 0) {
         const levelParams = levelSelect
           .map((level) => `level=${level}`)
           .join("&");
         url += `?${levelParams}`;
+      }
+      //make url for class
+      if (classSelect.length > 0) {
+        const classParams = classSelect
+          .map((spellclass) => `class=${spellclass}`)
+          .join("&");
+        url += `?${classParams}`;
       }
       const spellsRes = await fetch(url);
       const spellsJson = await spellsRes.json();
@@ -23,7 +30,7 @@ export function useSpellsList(levelSelect = []) {
       setLoading(false);
     }
     fetchSpells();
-  }, [levelSelect]);
+  }, [levelSelect, classSelect]);
 
   return { spells, loading };
 }

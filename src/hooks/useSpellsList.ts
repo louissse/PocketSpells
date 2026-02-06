@@ -3,7 +3,7 @@ import type { Spell } from "../types/spell";
 
 export function useSpellsList(
   levelSelect: string[] = [],
-  classSelect: string[] = [],
+  //classSelect: string[] = [],
 ) {
   const [spells, setSpells] = useState<Spell[]>([]);
   const [loading, setLoading] = useState(true);
@@ -20,20 +20,14 @@ export function useSpellsList(
           .join("&");
         url += `?${levelParams}`;
       }
-      //make url for class
-      if (classSelect.length > 0) {
-        const classParams = classSelect
-          .map((spellclass) => `class=${spellclass}`)
-          .join("&");
-        url += `?${classParams}`;
-      }
+
       const spellsRes = await fetch(url);
       const spellsJson = await spellsRes.json();
       setSpells(spellsJson.results);
       setLoading(false);
     }
     fetchSpells();
-  }, [levelSelect, classSelect]);
+  }, [levelSelect]);
 
   return { spells, loading };
 }

@@ -4,7 +4,7 @@ import RangedAttackIcon from "./ui/RangedAttackIcon";
 import MeleeAttackIcon from "./ui/MeleeAttackIcon";
 import FlameIcon from "./ui/FlameIcon";
 import AreaOfEffectIcon from "./ui/AreaOfEffectIcon";
-import VerbalIcon from "./ui/VerbalIcon copy 2";
+import VerbalIcon from "./ui/VerbalIcon";
 import SomaticIcon from "./ui/SomaticIcon";
 import MaterialIcon from "./ui/MaterialIcon";
 

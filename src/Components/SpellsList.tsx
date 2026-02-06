@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useSpellsList } from "../hooks/useSpellsList";
 import { useSpellDetails } from "../hooks/useSpellDetails";
 import SpellCard from "./SpellCard";
-import { ToggleGroup, ToggleGroupItem } from "../Components/ui/toggle-group";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
 const spellsToLoad = 20;
 
@@ -62,7 +62,7 @@ export default function SpellsList() {
               value={levelSelect}
               onValueChange={setLevelSelect}
               className="flex flex-wrap justify-center"
-              size="s"
+              size="sm"
               spacing={2}
             >
               <ToggleGroupItem value="0">Cantrip</ToggleGroupItem>

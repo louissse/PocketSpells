@@ -2,14 +2,14 @@ import { useState } from "react";
 import { useSpellsList } from "../hooks/useSpellsList";
 import { useSpellDetails } from "../hooks/useSpellDetails";
 import SpellCard from "./SpellCard";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { ToggleGroup, ToggleGroupItem } from "../Components/ui/toggle-group";
 
 const spellsToLoad = 20;
 
 export default function SpellsList() {
   const [index, setIndex] = useState(spellsToLoad);
-  const [levelSelect, setLevelSelect] = useState([]);
-  const [classSelect, setClassSelect] = useState([]);
+  const [levelSelect, setLevelSelect] = useState<string[]>([]);
+  const [classSelect, setClassSelect] = useState<string[]>([]);
   const { spells, loading: spellsLoading } = useSpellsList(
     levelSelect,
     classSelect,

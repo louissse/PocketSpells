@@ -9,11 +9,8 @@ const spellsToLoad = 20;
 export default function SpellsList() {
   const [index, setIndex] = useState(spellsToLoad);
   const [levelSelect, setLevelSelect] = useState<string[]>([]);
-  const [classSelect, setClassSelect] = useState<string[]>([]);
-  const { spells, loading: spellsLoading } = useSpellsList(
-    levelSelect,
-    classSelect,
-  );
+  //const [classSelect, setClassSelect] = useState<string[]>([]);
+  const { spells, loading: spellsLoading } = useSpellsList(levelSelect);
   const { spellDetails, loading: detailsLoading } = useSpellDetails(
     spells,
     index,

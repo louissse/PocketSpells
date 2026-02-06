@@ -1,7 +1,10 @@
 import { useState, useEffect } from "react";
 import type { Spell } from "../types/spell";
 
-export function useSpellsList(levelSelect = [], classSelect = []) {
+export function useSpellsList(
+  levelSelect: string[] = [],
+  classSelect: string[] = [],
+) {
   const [spells, setSpells] = useState<Spell[]>([]);
   const [loading, setLoading] = useState(true);
 

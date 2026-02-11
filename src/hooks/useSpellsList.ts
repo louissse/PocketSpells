@@ -5,7 +5,7 @@ export function useSpellsList(
   levelSelect: string[] = [],
   //classSelect: string[] = [],
 ) {
-  const [spells, setSpells] = useState<Spell[]>([]);
+  const [allSpells, setAllSpells] = useState<Spell[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -23,11 +23,11 @@ export function useSpellsList(
 
       const spellsRes = await fetch(url);
       const spellsJson = await spellsRes.json();
-      setSpells(spellsJson.results);
+      setAllSpells(spellsJson.results);
       setLoading(false);
     }
     fetchSpells();
   }, [levelSelect]);
 
-  return { spells, loading };
+  return { allSpells, loading };
 }

@@ -25,7 +25,7 @@ function App() {
         <h1 className="text-xl font-semibold">Pocket Spells</h1>
       </div>
       <div className="my-8">
-        <SpellsList /> test
+        <SpellsList />
       </div>
       <ReactQueryDevtools />
     </QueryClientProvider>

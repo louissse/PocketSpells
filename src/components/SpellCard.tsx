@@ -101,7 +101,7 @@ export default function SpellCard(spell: SpellDetail) {
       <div
         id="spell-details"
         className={`overflow-hidden transition-all duration-300 ease-in-out ${
-          seeDetails ? "max-h-300 opacity-100" : "max-h-0 opacity-0"
+          seeDetails ? "max-h-600 opacity-100" : "max-h-0 opacity-0"
         }`}
       >
         <SpellCardDetails {...spell} />

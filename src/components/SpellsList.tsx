@@ -56,56 +56,58 @@ export default function SpellsList() {
 
   return (
     <div className="min-h-84 p-6">
-      {!loading ? (
-        <div>
-          <div className="flex flex-col items-center">
-            <ToggleGroup
-              type="multiple"
-              variant="outline"
-              value={levelSelect}
-              onValueChange={setLevelSelect}
-              className="flex flex-wrap justify-center"
-              size="sm"
-              spacing={2}
-            >
-              <ToggleGroupItem value="0">Cantrip</ToggleGroupItem>
-              <ToggleGroupItem value="1">1st</ToggleGroupItem>
-              <ToggleGroupItem value="2">2nd</ToggleGroupItem>
-              <ToggleGroupItem value="3">3rd</ToggleGroupItem>
-              <ToggleGroupItem value="4">4th</ToggleGroupItem>
-              <ToggleGroupItem value="5">5th</ToggleGroupItem>
-              <ToggleGroupItem value="6">6th</ToggleGroupItem>
-              <ToggleGroupItem value="7">7th</ToggleGroupItem>
-              <ToggleGroupItem value="8">8th</ToggleGroupItem>
-              <ToggleGroupItem value="9">9th</ToggleGroupItem>
-            </ToggleGroup>
-          </div>
-          <ul className="flex flex-col gap-2 py-6">
-            {spellDetails.map((spell) => (
-              <li key={spell.index}>
-                <SpellCard {...spell} />
-              </li>
-            ))}
-          </ul>
+      <div className="flex flex-col items-center">
+        <ToggleGroup
+          type="multiple"
+          variant="outline"
+          value={levelSelect}
+          onValueChange={setLevelSelect}
+          className="flex flex-wrap justify-center"
+          size="sm"
+          spacing={2}
+        >
+          <ToggleGroupItem value="0">Cantrip</ToggleGroupItem>
+          <ToggleGroupItem value="1">1st</ToggleGroupItem>
+          <ToggleGroupItem value="2">2nd</ToggleGroupItem>
+          <ToggleGroupItem value="3">3rd</ToggleGroupItem>
+          <ToggleGroupItem value="4">4th</ToggleGroupItem>
+          <ToggleGroupItem value="5">5th</ToggleGroupItem>
+          <ToggleGroupItem value="6">6th</ToggleGroupItem>
+          <ToggleGroupItem value="7">7th</ToggleGroupItem>
+          <ToggleGroupItem value="8">8th</ToggleGroupItem>
+          <ToggleGroupItem value="9">9th</ToggleGroupItem>
+        </ToggleGroup>
+      </div>
+      <div className="py-6">
+        {!loading ? (
+          <div>
+            <ul className="flex flex-col gap-2">
+              {spellDetails.map((spell) => (
+                <li key={spell.index}>
+                  <SpellCard {...spell} />
+                </li>
+              ))}
+            </ul>
 
-          {/* Invisible trigger element for infinite scroll */}
-          <div
-            ref={loadMoreRef}
-            className="flex h-10 items-center justify-center"
-          >
-            {isFetchingNextPage && (
-              <div className="text-center">Loading more spells...</div>
-            )}
-            {!hasNextPage && spellDetails.length > 0 && (
-              <div className="text-center text-gray-500">
-                All spells loaded!
-              </div>
-            )}
+            {/* Invisible trigger element for infinite scroll */}
+            <div
+              ref={loadMoreRef}
+              className="flex h-10 items-center justify-center"
+            >
+              {isFetchingNextPage && (
+                <div className="text-center">Loading more spells...</div>
+              )}
+              {!hasNextPage && spellDetails.length > 0 && (
+                <div className="text-center text-gray-500">
+                  All spells loaded!
+                </div>
+              )}
+            </div>
           </div>
-        </div>
-      ) : (
-        <p>Loading spells ...</p>
-      )}
+        ) : (
+          <p>Loading spells ...</p>
+        )}
+      </div>
     </div>
   );
 }

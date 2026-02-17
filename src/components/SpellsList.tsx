@@ -1,93 +1,113 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useSpellsList } from "../hooks/useSpellsList";
-import { useSpellDetails } from "../hooks/useSpellDetails";
+import { useInfiniteSpellDetails } from "../hooks/useSpellDetails";
 import SpellCard from "./SpellCard";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
-const spellsToLoad = 20;
-
 export default function SpellsList() {
-  const [index, setIndex] = useState(spellsToLoad);
   const [levelSelect, setLevelSelect] = useState<string[]>([]);
-  //const [classSelect, setClassSelect] = useState<string[]>([]);
-  const { spells, loading: spellsLoading } = useSpellsList(levelSelect);
-  const { spellDetails, loading: detailsLoading } = useSpellDetails(
-    spells,
-    index,
-    spellsToLoad,
-  );
+  const { allSpells, loading: spellsLoading } = useSpellsList(levelSelect);
+  const {
+    spellDetails,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading: detailsLoading,
+    isError,
+    error,
+  } = useInfiniteSpellDetails(allSpells);
 
-  function handleNext() {
-    if (index < spells.length) {
-      setIndex(index + spellsToLoad);
-    }
-  }
+  const loadMoreRef = useRef<HTMLDivElement>(null);
 
-  function handlePrevious() {
-    if (index > spellsToLoad) {
-      setIndex(index - spellsToLoad);
-    }
-  }
+  // IntersectionObserver for infinite scroll
+  useEffect(() => {
+    const loadMoreElement = loadMoreRef.current;
+    if (!loadMoreElement) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const [entry] = entries;
+        if (entry.isIntersecting && hasNextPage && !isFetchingNextPage) {
+          fetchNextPage();
+        }
+      },
+      {
+        threshold: 0.1,
+        rootMargin: "100px", // Start loading 100px before element is visible
+      },
+    );
+
+    observer.observe(loadMoreElement);
+
+    return () => {
+      observer.unobserve(loadMoreElement);
+    };
+  }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
   const loading = spellsLoading || detailsLoading;
 
+  if (isError) {
+    return (
+      <div className="min-h-84 p-6">
+        <div>Error loading spells: {error?.message}</div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-84 p-6">
-      {!loading ? (
-        <div>
-          <h2>
-            Spells {index - (spellsToLoad - 1)} -{" "}
-            {Math.min(index, spells.length)}
-          </h2>
+      <div className="flex flex-col items-center">
+        <ToggleGroup
+          type="multiple"
+          variant="outline"
+          value={levelSelect}
+          onValueChange={setLevelSelect}
+          className="flex flex-wrap justify-center"
+          size="sm"
+          spacing={2}
+        >
+          <ToggleGroupItem value="0">Cantrip</ToggleGroupItem>
+          <ToggleGroupItem value="1">1st</ToggleGroupItem>
+          <ToggleGroupItem value="2">2nd</ToggleGroupItem>
+          <ToggleGroupItem value="3">3rd</ToggleGroupItem>
+          <ToggleGroupItem value="4">4th</ToggleGroupItem>
+          <ToggleGroupItem value="5">5th</ToggleGroupItem>
+          <ToggleGroupItem value="6">6th</ToggleGroupItem>
+          <ToggleGroupItem value="7">7th</ToggleGroupItem>
+          <ToggleGroupItem value="8">8th</ToggleGroupItem>
+          <ToggleGroupItem value="9">9th</ToggleGroupItem>
+        </ToggleGroup>
+      </div>
+      <div className="py-6">
+        {!loading ? (
           <div>
-            <button
-              type="button"
-              onClick={handlePrevious}
-              disabled={index <= spellsToLoad}
+            <ul className="flex flex-col gap-2">
+              {spellDetails.map((spell) => (
+                <li key={spell.index}>
+                  <SpellCard {...spell} />
+                </li>
+              ))}
+            </ul>
+
+            {/* Invisible trigger element for infinite scroll */}
+            <div
+              ref={loadMoreRef}
+              className="flex h-10 items-center justify-center"
             >
-              Previous {spellsToLoad}
-            </button>
-            <button
-              type="button"
-              onClick={handleNext}
-              disabled={index >= spells.length}
-            >
-              Next {spellsToLoad}
-            </button>
+              {isFetchingNextPage && (
+                <div className="text-center">Loading more spells...</div>
+              )}
+              {!hasNextPage && spellDetails.length > 0 && (
+                <div className="text-center text-gray-500">
+                  All spells loaded!
+                </div>
+              )}
+            </div>
           </div>
-          <div className="flex flex-col items-center">
-            <ToggleGroup
-              type="multiple"
-              variant="outline"
-              value={levelSelect}
-              onValueChange={setLevelSelect}
-              className="flex flex-wrap justify-center"
-              size="sm"
-              spacing={2}
-            >
-              <ToggleGroupItem value="0">Cantrip</ToggleGroupItem>
-              <ToggleGroupItem value="1">1st</ToggleGroupItem>
-              <ToggleGroupItem value="2">2nd</ToggleGroupItem>
-              <ToggleGroupItem value="3">3rd</ToggleGroupItem>
-              <ToggleGroupItem value="4">4th</ToggleGroupItem>
-              <ToggleGroupItem value="5">5th</ToggleGroupItem>
-              <ToggleGroupItem value="6">6th</ToggleGroupItem>
-              <ToggleGroupItem value="7">7th</ToggleGroupItem>
-              <ToggleGroupItem value="8">8th</ToggleGroupItem>
-              <ToggleGroupItem value="9">9th</ToggleGroupItem>
-            </ToggleGroup>
-          </div>
-          <ul className="flex flex-col gap-2 py-6">
-            {spellDetails.map((spell) => (
-              <li key={spell.index}>
-                <SpellCard {...spell} />
-              </li>
-            ))}
-          </ul>
-        </div>
-      ) : (
-        <p>Loading spells ...</p>
-      )}
+        ) : (
+          <p>Loading spells ...</p>
+        )}
+      </div>
     </div>
   );
 }

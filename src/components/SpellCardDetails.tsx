@@ -13,7 +13,7 @@ export default function SpellCardDetails(spell: SpellDetail) {
         <span className="font-bold text-slate-600">Duration: </span>
         {spell.duration}
       </p>
-      {spell.damage && (
+      {spell.damage && spell.damage.damage_type && (
         <p>
           <span className="font-bold text-slate-600">Dammage: </span>
           <span
@@ -31,19 +31,19 @@ export default function SpellCardDetails(spell: SpellDetail) {
           </span>
         </p>
       )}
-      <p>
+      <div>
         {spell.dc && (
-          <div>
+          <p>
             <span className="font-bold text-slate-600">Save: </span>
             <span>
               {spell.dc.dc_type.name} {" Save"} {" (Success:"}{" "}
               {spell.dc.dc_success}
               {" damage)"}
             </span>
-          </div>
+          </p>
         )}
         {spell.attack_type && (
-          <div>
+          <p>
             <span className="font-bold text-slate-600">Attack: </span>
             <span className="capitalize">
               {spell.attack_type === "ranged" ? (
@@ -53,9 +53,9 @@ export default function SpellCardDetails(spell: SpellDetail) {
               ) : null}{" "}
               {spell.attack_type}
             </span>
-          </div>
+          </p>
         )}
-      </p>
+      </div>
       {spell.material && (
         <p>
           <span className="font-bold text-slate-600">Materials: </span>

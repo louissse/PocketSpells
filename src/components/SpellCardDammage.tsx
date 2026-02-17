@@ -9,9 +9,10 @@ import SomaticIcon from "./ui/SomaticIcon";
 import MaterialIcon from "./ui/MaterialIcon";
 
 export default function SpellCardDammage(spell: SpellDetail) {
-  const iconColor = spell.damage
-    ? getDamageTypeColor(spell.damage.damage_type.index)
-    : "text-orange-400";
+  const iconColor =
+    spell.damage && spell.damage.damage_type
+      ? getDamageTypeColor(spell.damage.damage_type.index)
+      : "text-orange-400";
 
   return (
     <div className="flex flex-row justify-between">

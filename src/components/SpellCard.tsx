@@ -6,7 +6,9 @@ import { useState } from "react";
 import ConcentrationIcon from "./ui/ConcentrationIcon";
 import RitualIcon from "./ui/RitualIcon copy";
 
-export default function SpellCard(spell: SpellDetail) {
+export default function SpellCard(
+  spell: SpellDetail & { selectedClass?: string | null },
+) {
   let borderClass = "border-slate-900/30";
   let schoolTextClass = "text-slate-900";
 
@@ -108,14 +110,22 @@ export default function SpellCard(spell: SpellDetail) {
       </div>
       <div className="flex flex-row justify-between">
         <ul className="flex flex-row flex-wrap gap-1">
-          {spell.classes.map((classes) => (
-            <li
-              className="text-xs font-bold text-slate-600"
-              key={classes.index}
-            >
-              {classes.name}
-            </li>
-          ))}
+          {spell.classes.map((classes) => {
+            const isSelected =
+              spell.selectedClass && classes.index === spell.selectedClass;
+            return (
+              <li
+                className={`text-xs ${
+                  isSelected
+                    ? "font-extrabold text-blue-800"
+                    : "font-bold text-slate-600"
+                }`}
+                key={classes.index}
+              >
+                {classes.name}
+              </li>
+            );
+          })}
         </ul>
         <p className={"text-xs font-bold " + schoolTextClass}>
           {spell.school.name}
@@ -128,33 +138,33 @@ export default function SpellCard(spell: SpellDetail) {
 export function SpellCardSkeleton() {
   return (
     <div className="animate-pulse">
-      <div className="flex min-h-20 flex-col justify-between gap-2 rounded border border-slate-900/30 bg-linear-to-b from-rose-50/30 to-pink-100/30 p-2 shadow-xs">
+      <div className="flex min-h-20 flex-col justify-between gap-2 rounded border border-slate-300 bg-linear-to-b from-gray-100 to-gray-200 p-2 shadow-xs">
         <div className="flex items-center justify-between gap-2">
           <div className="flex flex-1 flex-row items-center gap-2">
             {/* Spell name skeleton */}
-            <div className="h-5 w-32 rounded bg-slate-300/60"></div>
+            <div className="h-5 w-32 rounded bg-gray-300"></div>
 
             {/* Icons skeleton */}
             <div className="flex flex-row gap-3">
-              <div className="h-4 w-12 rounded bg-slate-300/60"></div>
-              <div className="h-4 w-4 rounded bg-slate-300/60"></div>
+              <div className="h-4 w-12 rounded bg-gray-300"></div>
+              <div className="h-4 w-4 rounded bg-gray-300"></div>
             </div>
           </div>
 
           {/* Level badge skeleton */}
-          <div className="h-5 w-5 rounded-full bg-slate-400"></div>
+          <div className="h-5 w-5 rounded-full bg-gray-400"></div>
         </div>
 
         {/* Damage/range skeleton */}
-        <div className="mb-4 h-4 w-3/4 rounded bg-slate-300/60"></div>
+        <div className="h-4 w-3/4 rounded bg-gray-300"></div>
 
         {/* Classes and school skeleton */}
         <div className="flex flex-row justify-between">
           <div className="flex gap-1">
-            <div className="h-3 w-12 rounded bg-slate-300/60"></div>
-            <div className="h-3 w-16 rounded bg-slate-300/60"></div>
+            <div className="h-3 w-12 rounded bg-gray-300"></div>
+            <div className="h-3 w-16 rounded bg-gray-300"></div>
           </div>
-          <div className="h-3 w-20 rounded bg-slate-300/60"></div>
+          <div className="h-3 w-20 rounded bg-gray-300"></div>
         </div>
       </div>
     </div>

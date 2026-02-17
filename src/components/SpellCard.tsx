@@ -124,3 +124,39 @@ export default function SpellCard(spell: SpellDetail) {
     </div>
   );
 }
+
+export function SpellCardSkeleton() {
+  return (
+    <div className="animate-pulse">
+      <div className="flex min-h-20 flex-col justify-between gap-2 rounded border border-slate-900/30 bg-linear-to-b from-rose-50/30 to-pink-100/30 p-2 shadow-xs">
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex flex-1 flex-row items-center gap-2">
+            {/* Spell name skeleton */}
+            <div className="h-5 w-32 rounded bg-slate-300/60"></div>
+
+            {/* Icons skeleton */}
+            <div className="flex flex-row gap-3">
+              <div className="h-4 w-12 rounded bg-slate-300/60"></div>
+              <div className="h-4 w-4 rounded bg-slate-300/60"></div>
+            </div>
+          </div>
+
+          {/* Level badge skeleton */}
+          <div className="h-5 w-5 rounded-full bg-slate-400"></div>
+        </div>
+
+        {/* Damage/range skeleton */}
+        <div className="mb-4 h-4 w-3/4 rounded bg-slate-300/60"></div>
+
+        {/* Classes and school skeleton */}
+        <div className="flex flex-row justify-between">
+          <div className="flex gap-1">
+            <div className="h-3 w-12 rounded bg-slate-300/60"></div>
+            <div className="h-3 w-16 rounded bg-slate-300/60"></div>
+          </div>
+          <div className="h-3 w-20 rounded bg-slate-300/60"></div>
+        </div>
+      </div>
+    </div>
+  );
+}

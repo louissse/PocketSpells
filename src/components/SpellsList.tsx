@@ -1,12 +1,35 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import { useSpellsList } from "../hooks/useSpellsList";
 import { useInfiniteSpellDetails } from "../hooks/useSpellDetails";
 import SpellCard from "./SpellCard";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import Fuse from "fuse.js";
 
 export default function SpellsList() {
   const [levelSelect, setLevelSelect] = useState<string[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
   const { allSpells, loading: spellsLoading } = useSpellsList(levelSelect);
+
+  // Configure Fuse.js for searching spell names only
+  const fuse = useMemo(() => {
+    if (!allSpells.length) return null;
+
+    return new Fuse(allSpells, {
+      keys: ["name"], // Only search in spell names
+      threshold: 0.3, // Adjust for fuzzy matching sensitivity
+      includeScore: true,
+    });
+  }, [allSpells]);
+
+  // Filter spells based on search query
+  const filteredSpells = useMemo(() => {
+    if (!searchQuery.trim()) return allSpells;
+    if (!fuse) return [];
+
+    const results = fuse.search(searchQuery);
+    return results.map((result) => result.item);
+  }, [allSpells, fuse, searchQuery]);
+
   const {
     spellDetails,
     fetchNextPage,
@@ -15,7 +38,7 @@ export default function SpellsList() {
     isLoading: detailsLoading,
     isError,
     error,
-  } = useInfiniteSpellDetails(allSpells);
+  } = useInfiniteSpellDetails(filteredSpells);
 
   const loadMoreRef = useRef<HTMLDivElement>(null);
 
@@ -56,7 +79,19 @@ export default function SpellsList() {
 
   return (
     <div className="min-h-84 p-6">
-      <div className="flex flex-col items-center">
+      <div className="flex flex-col items-center gap-4">
+        {/* Search Input */}
+        <div className="w-full max-w-md">
+          <input
+            type="text"
+            placeholder="Search spells by name..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          />
+        </div>
+
+        {/* Level Filter */}
         <ToggleGroup
           type="multiple"
           variant="outline"

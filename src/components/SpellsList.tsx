@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, useMemo } from "react";
 import { useSpellsList } from "../hooks/useSpellsList";
 import { useInfiniteSpellDetails } from "../hooks/useSpellDetails";
-import SpellCard from "./SpellCard";
+import SpellCard, { SpellCardSkeleton } from "./SpellCard";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import Fuse from "fuse.js";
 
@@ -90,6 +90,7 @@ export default function SpellsList() {
             className="w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none"
           />
         </div>
+        <p className="self-start text-right">Filters:</p>
 
         {/* Level Filter */}
         <ToggleGroup
@@ -97,7 +98,7 @@ export default function SpellsList() {
           variant="outline"
           value={levelSelect}
           onValueChange={setLevelSelect}
-          className="flex flex-wrap justify-center"
+          className="flex flex-wrap justify-start"
           size="sm"
           spacing={2}
         >
@@ -114,34 +115,36 @@ export default function SpellsList() {
         </ToggleGroup>
       </div>
       <div className="py-6">
-        {!loading ? (
-          <div>
-            <ul className="flex flex-col gap-2">
-              {spellDetails.map((spell) => (
-                <li key={spell.index}>
-                  <SpellCard {...spell} />
+        <div>
+          <ul className="flex flex-col gap-2">
+            {/* Show actual spell cards */}
+            {spellDetails.map((spell) => (
+              <li key={spell.index}>
+                <SpellCard {...spell} />
+              </li>
+            ))}
+
+            {/* Show skeleton loaders when loading more or initial load */}
+            {(loading || isFetchingNextPage) &&
+              Array.from({ length: 7 }).map((_, index) => (
+                <li key={`skeleton-${index}`}>
+                  <SpellCardSkeleton />
                 </li>
               ))}
-            </ul>
+          </ul>
 
-            {/* Invisible trigger element for infinite scroll */}
-            <div
-              ref={loadMoreRef}
-              className="flex h-10 items-center justify-center"
-            >
-              {isFetchingNextPage && (
-                <div className="text-center">Loading more spells...</div>
-              )}
-              {!hasNextPage && spellDetails.length > 0 && (
-                <div className="text-center text-gray-500">
-                  All spells loaded!
-                </div>
-              )}
-            </div>
+          {/* Invisible trigger element for infinite scroll */}
+          <div
+            ref={loadMoreRef}
+            className="flex h-10 items-center justify-center"
+          >
+            {!hasNextPage && spellDetails.length > 0 && !loading && (
+              <div className="text-center text-gray-500">
+                All spells loaded!
+              </div>
+            )}
           </div>
-        ) : (
-          <p>Loading spells ...</p>
-        )}
+        </div>
       </div>
     </div>
   );

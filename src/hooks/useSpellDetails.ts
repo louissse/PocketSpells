@@ -27,7 +27,7 @@ export function useInfiniteSpellDetails(
     isError,
     error,
   } = useInfiniteQuery({
-    queryKey: ["infiniteSpellDetails", allSpells],
+    queryKey: ["infiniteSpellDetails", allSpells, pageSize],
     queryFn: async ({ pageParam }) => {
       const startIndex = pageParam * pageSize;
       const endIndex = startIndex + pageSize;
@@ -36,7 +36,7 @@ export function useInfiniteSpellDetails(
       return await fetchSpellDetails(spellsToFetch);
     },
     initialPageParam: 0,
-    getNextPageParam: (lastPage, allPages, lastPageParam) => {
+    getNextPageParam: (lastPage, _allPages, lastPageParam) => {
       // If last page was less than pageSize, we've reached the end
       if (lastPage.length < pageSize) return undefined;
 

@@ -3,12 +3,23 @@ import { useSpellsList } from "../hooks/useSpellsList";
 import { useInfiniteSpellDetails } from "../hooks/useSpellDetails";
 import SpellCard, { SpellCardSkeleton } from "./SpellCard";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import Fuse from "fuse.js";
 
 export default function SpellsList() {
   const [levelSelect, setLevelSelect] = useState<string[]>([]);
+  const [classSelect, setClassSelect] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
-  const { allSpells, loading: spellsLoading } = useSpellsList(levelSelect);
+  const { allSpells, loading: spellsLoading } = useSpellsList(
+    levelSelect,
+    classSelect,
+  );
 
   // Configure Fuse.js for searching spell names only
   const fuse = useMemo(() => {
@@ -90,8 +101,31 @@ export default function SpellsList() {
             className="w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none"
           />
         </div>
+        {/* Class Filter */}
+        <div className="w-full max-w-md">
+          <Select
+            value={classSelect || "all"}
+            onValueChange={(value) =>
+              setClassSelect(value === "all" ? null : value)
+            }
+          >
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="All Classes" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Classes</SelectItem>
+              <SelectItem value="bard">Bard</SelectItem>
+              <SelectItem value="cleric">Cleric</SelectItem>
+              <SelectItem value="druid">Druid</SelectItem>
+              <SelectItem value="paladin">Paladin</SelectItem>
+              <SelectItem value="ranger">Ranger</SelectItem>
+              <SelectItem value="sorcerer">Sorcerer</SelectItem>
+              <SelectItem value="warlock">Warlock</SelectItem>
+              <SelectItem value="wizard">Wizard</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>{" "}
         <p className="self-start text-right">Filters:</p>
-
         {/* Level Filter */}
         <ToggleGroup
           type="multiple"
@@ -120,7 +154,7 @@ export default function SpellsList() {
             {/* Show actual spell cards */}
             {spellDetails.map((spell) => (
               <li key={spell.index}>
-                <SpellCard {...spell} />
+                <SpellCard {...spell} selectedClass={classSelect} />
               </li>
             ))}
 

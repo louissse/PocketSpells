@@ -5,13 +5,15 @@ import SpellCardDetails from "./SpellCardDetails";
 import { useState } from "react";
 import ConcentrationIcon from "./ui/ConcentrationIcon";
 import RitualIcon from "./ui/RitualIcon copy";
-import { BookMarked, Bookmark } from "lucide-react";
+import { BookMarked, Bookmark, Wand2, Pencil, Trash2 } from "lucide-react";
 
 export default function SpellCard(
   spell: SpellDetail & {
     selectedClass?: string | null;
     isInPocket?: boolean;
     onTogglePocket?: (spell: SpellDetail) => void;
+    onEdit?: () => void;
+    onDelete?: () => void;
   },
 ) {
   let borderClass = "border-slate-900/30";
@@ -102,7 +104,40 @@ export default function SpellCard(
           <div className="flex h-5 w-5 items-center justify-center rounded-full bg-linear-to-br from-slate-700 to-gray-900">
             <p className="text-xs font-bold text-white">{spell.level}</p>
           </div>
-          {spell.onTogglePocket && (
+
+          {/* Custom spell: wand icon + edit + delete */}
+          {spell.custom && (
+            <div className="flex items-center gap-1">
+              <Wand2 className="h-4 w-4 fill-violet-400 text-violet-500" />
+              {spell.onEdit && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    spell.onEdit!();
+                  }}
+                  className="text-muted-foreground transition-colors hover:text-violet-500"
+                  aria-label="Edit spell"
+                >
+                  <Pencil className="h-4 w-4" />
+                </button>
+              )}
+              {spell.onDelete && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    spell.onDelete!();
+                  }}
+                  className="text-muted-foreground transition-colors hover:text-rose-500"
+                  aria-label="Delete spell"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </button>
+              )}
+            </div>
+          )}
+
+          {/* API spell: bookmark toggle */}
+          {!spell.custom && spell.onTogglePocket && (
             <button
               onClick={(e) => {
                 e.stopPropagation();

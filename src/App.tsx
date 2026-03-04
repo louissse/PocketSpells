@@ -7,6 +7,7 @@ import PocketScreen from "./components/PocketScreen";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { usePocket } from "./hooks/usePocket";
+import { useCustomSpells } from "./hooks/useCustomSpells";
 import { useSwipeable } from "react-swipeable";
 
 const queryClient = new QueryClient();
@@ -19,6 +20,8 @@ function App() {
   const handleSplashDone = useCallback(() => setSplashDone(true), []);
   const [activeTab, setActiveTab] = useState<Tab>("spells");
   const { pocketedSpells, togglePocket, isInPocket } = usePocket();
+  const { customSpells, addCustomSpell, updateCustomSpell, deleteCustomSpell } =
+    useCustomSpells();
 
   const swipeHandlers = useSwipeable({
     onSwipedLeft: () => {
@@ -65,6 +68,10 @@ function App() {
                 pocketedSpells={pocketedSpells}
                 isInPocket={isInPocket}
                 onTogglePocket={togglePocket}
+                customSpells={customSpells}
+                onAddCustomSpell={addCustomSpell}
+                onUpdateCustomSpell={updateCustomSpell}
+                onDeleteCustomSpell={deleteCustomSpell}
               />
             </div>
           </div>

@@ -58,4 +58,5 @@ export interface SpellDetail {
   }>;
   url: string;
   updated_at: string;
+  custom?: boolean;
 }

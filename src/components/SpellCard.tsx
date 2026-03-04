@@ -5,7 +5,7 @@ import SpellCardDetails from "./SpellCardDetails";
 import { useState } from "react";
 import ConcentrationIcon from "./ui/ConcentrationIcon";
 import RitualIcon from "./ui/RitualIcon copy";
-import { BookMarked, Bookmark, Wand2, Pencil, Trash2 } from "lucide-react";
+import { BookMarked, Bookmark, Wand2, Pencil } from "lucide-react";
 
 export default function SpellCard(
   spell: SpellDetail & {
@@ -13,7 +13,6 @@ export default function SpellCard(
     isInPocket?: boolean;
     onTogglePocket?: (spell: SpellDetail) => void;
     onEdit?: () => void;
-    onDelete?: () => void;
   },
 ) {
   let borderClass = "border-slate-900/30";
@@ -119,18 +118,6 @@ export default function SpellCard(
                   aria-label="Edit spell"
                 >
                   <Pencil className="h-4 w-4" />
-                </button>
-              )}
-              {spell.onDelete && (
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    spell.onDelete!();
-                  }}
-                  className="text-muted-foreground transition-colors hover:text-rose-500"
-                  aria-label="Delete spell"
-                >
-                  <Trash2 className="h-4 w-4" />
                 </button>
               )}
             </div>

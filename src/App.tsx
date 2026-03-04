@@ -7,16 +7,31 @@ import PocketScreen from "./components/PocketScreen";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { usePocket } from "./hooks/usePocket";
+import { useSwipeable } from "react-swipeable";
 
 const queryClient = new QueryClient();
 
-type Tab = "spells" | "pocket";
+const TABS = ["spells", "pocket"] as const;
+type Tab = (typeof TABS)[number];
 
 function App() {
   const [splashDone, setSplashDone] = useState(false);
   const handleSplashDone = useCallback(() => setSplashDone(true), []);
   const [activeTab, setActiveTab] = useState<Tab>("spells");
   const { pocketedSpells, togglePocket, isInPocket } = usePocket();
+
+  const swipeHandlers = useSwipeable({
+    onSwipedLeft: () => {
+      const idx = TABS.indexOf(activeTab);
+      if (idx < TABS.length - 1) setActiveTab(TABS[idx + 1]);
+    },
+    onSwipedRight: () => {
+      const idx = TABS.indexOf(activeTab);
+      if (idx > 0) setActiveTab(TABS[idx - 1]);
+    },
+    preventScrollOnSwipe: false,
+    trackMouse: false,
+  });
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -30,17 +45,27 @@ function App() {
         </div>
 
         {/* Screen content — padded so it doesn't hide behind the nav bar */}
-        <div className="pb-16">
-          {activeTab === "spells" && (
-            <SpellsList isInPocket={isInPocket} onTogglePocket={togglePocket} />
-          )}
-          {activeTab === "pocket" && (
-            <PocketScreen
-              pocketedSpells={pocketedSpells}
-              isInPocket={isInPocket}
-              onTogglePocket={togglePocket}
-            />
-          )}
+        <div className="overflow-hidden pb-16" {...swipeHandlers}>
+          <div
+            className={`flex transition-transform duration-200 ease-in-out ${
+              activeTab === "spells" ? "translate-x-0" : "-translate-x-1/2"
+            }`}
+            style={{ width: "200%" }}
+          >
+            <div className="w-1/2 min-w-0">
+              <SpellsList
+                isInPocket={isInPocket}
+                onTogglePocket={togglePocket}
+              />
+            </div>
+            <div className="w-1/2 min-w-0">
+              <PocketScreen
+                pocketedSpells={pocketedSpells}
+                isInPocket={isInPocket}
+                onTogglePocket={togglePocket}
+              />
+            </div>
+          </div>
         </div>
 
         {/* Bottom navigation */}

@@ -38,7 +38,7 @@ function App() {
       <SplashScreen onDone={handleSplashDone} />
 
       <div
-        className={`flex h-screen flex-col ${splashDone ? "app-fade-in" : "opacity-0"}`}
+        className={`flex h-[100dvh] flex-col ${splashDone ? "app-fade-in" : "opacity-0"}`}
       >
         {/* Header */}
         <div className="flex h-12 shrink-0 flex-row items-center gap-4 bg-white p-2">

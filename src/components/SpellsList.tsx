@@ -11,8 +11,17 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import Fuse from "fuse.js";
+import type { SpellDetail } from "../types/spell";
 
-export default function SpellsList() {
+interface SpellsListProps {
+  isInPocket: (index: string) => boolean;
+  onTogglePocket: (spell: SpellDetail) => void;
+}
+
+export default function SpellsList({
+  isInPocket,
+  onTogglePocket,
+}: SpellsListProps) {
   const [levelSelect, setLevelSelect] = useState<string[]>([]);
   const [classSelect, setClassSelect] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
@@ -154,7 +163,12 @@ export default function SpellsList() {
             {/* Show actual spell cards */}
             {spellDetails.map((spell) => (
               <li key={spell.index}>
-                <SpellCard {...spell} selectedClass={classSelect} />
+                <SpellCard
+                  {...spell}
+                  selectedClass={classSelect}
+                  isInPocket={isInPocket(spell.index)}
+                  onTogglePocket={onTogglePocket}
+                />
               </li>
             ))}
 

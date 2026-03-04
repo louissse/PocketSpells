@@ -5,9 +5,14 @@ import SpellCardDetails from "./SpellCardDetails";
 import { useState } from "react";
 import ConcentrationIcon from "./ui/ConcentrationIcon";
 import RitualIcon from "./ui/RitualIcon copy";
+import { BookMarked, Bookmark } from "lucide-react";
 
 export default function SpellCard(
-  spell: SpellDetail & { selectedClass?: string | null },
+  spell: SpellDetail & {
+    selectedClass?: string | null;
+    isInPocket?: boolean;
+    onTogglePocket?: (spell: SpellDetail) => void;
+  },
 ) {
   let borderClass = "border-slate-900/30";
   let schoolTextClass = "text-slate-900";
@@ -93,8 +98,28 @@ export default function SpellCard(
           </ul>
         </div>
 
-        <div className="flex h-5 w-5 items-center justify-center rounded-full bg-linear-to-br from-slate-700 to-gray-900">
-          <p className="text-xs font-bold text-white">{spell.level}</p>
+        <div className="flex items-center gap-2">
+          <div className="flex h-5 w-5 items-center justify-center rounded-full bg-linear-to-br from-slate-700 to-gray-900">
+            <p className="text-xs font-bold text-white">{spell.level}</p>
+          </div>
+          {spell.onTogglePocket && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                spell.onTogglePocket!(spell);
+              }}
+              className="text-muted-foreground transition-colors hover:text-rose-500"
+              aria-label={
+                spell.isInPocket ? "Remove from pocket" : "Add to pocket"
+              }
+            >
+              {spell.isInPocket ? (
+                <BookMarked className="h-4 w-4 fill-rose-500 text-rose-500" />
+              ) : (
+                <Bookmark className="h-4 w-4" />
+              )}
+            </button>
+          )}
         </div>
       </div>
 

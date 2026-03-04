@@ -37,28 +37,30 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <SplashScreen onDone={handleSplashDone} />
 
-      <div className={splashDone ? "app-fade-in" : "opacity-0"}>
+      <div
+        className={`flex h-screen flex-col ${splashDone ? "app-fade-in" : "opacity-0"}`}
+      >
         {/* Header */}
-        <div className="flex h-12 flex-row items-center gap-4 bg-white p-2">
+        <div className="flex h-12 shrink-0 flex-row items-center gap-4 bg-white p-2">
           <div className="h-8 w-8 rounded-full bg-linear-to-br from-rose-400 to-pink-600"></div>
           <h1 className="text-xl font-semibold">Pocket Spells</h1>
         </div>
 
-        {/* Screen content — padded so it doesn't hide behind the nav bar */}
-        <div className="overflow-hidden pb-16" {...swipeHandlers}>
+        {/* Screen content — each screen scrolls independently */}
+        <div className="min-h-0 flex-1 overflow-hidden" {...swipeHandlers}>
           <div
-            className={`flex transition-transform duration-200 ease-in-out ${
+            className={`flex h-full transition-transform duration-200 ease-in-out ${
               activeTab === "spells" ? "translate-x-0" : "-translate-x-1/2"
             }`}
             style={{ width: "200%" }}
           >
-            <div className="w-1/2 min-w-0">
+            <div className="w-1/2 min-w-0 overflow-y-auto">
               <SpellsList
                 isInPocket={isInPocket}
                 onTogglePocket={togglePocket}
               />
             </div>
-            <div className="w-1/2 min-w-0">
+            <div className="w-1/2 min-w-0 overflow-y-auto">
               <PocketScreen
                 pocketedSpells={pocketedSpells}
                 isInPocket={isInPocket}

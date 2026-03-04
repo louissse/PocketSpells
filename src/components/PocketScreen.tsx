@@ -119,6 +119,7 @@ export default function PocketScreen({
           <SheetContent
             side="bottom"
             className="max-h-[92dvh] overflow-y-auto rounded-t-xl"
+            onInteractOutside={(e) => e.preventDefault()}
           >
             <SheetHeader>
               <SheetTitle>
@@ -238,6 +239,7 @@ export default function PocketScreen({
         <SheetContent
           side="bottom"
           className="max-h-[92dvh] overflow-y-auto rounded-t-xl"
+          onInteractOutside={(e) => e.preventDefault()}
         >
           <SheetHeader>
             <SheetTitle>

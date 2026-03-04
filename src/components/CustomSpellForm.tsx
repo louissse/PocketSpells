@@ -65,6 +65,7 @@ type FormData = {
   material: string;
   desc: string;
   damage_type: string;
+  damage_dice: string;
   aoe_type: string;
   aoe_size: string;
   saving_throw: string;
@@ -84,6 +85,7 @@ const EMPTY_FORM: FormData = {
   material: "",
   desc: "",
   damage_type: "",
+  damage_dice: "",
   aoe_type: "",
   aoe_size: "",
   saving_throw: "",
@@ -104,6 +106,10 @@ function spellToForm(spell: SpellDetail): FormData {
     material: spell.material ?? "",
     desc: spell.desc?.join("\n\n") ?? "",
     damage_type: spell.damage?.damage_type?.name ?? "",
+    damage_dice:
+      Object.values(spell.damage?.damage_at_slot_level ?? {})[0] ??
+      Object.values(spell.damage?.damage_at_character_level ?? {})[0] ??
+      "",
     aoe_type: spell.area_of_effect?.type ?? "",
     aoe_size: spell.area_of_effect?.size
       ? String(spell.area_of_effect.size)
@@ -119,6 +125,7 @@ interface CustomSpellFormProps {
     data: Omit<SpellDetail, "index" | "url" | "updated_at" | "custom">,
   ) => void;
   onCancel: () => void;
+  onDelete?: () => void;
 }
 
 const labelClass = "block text-sm font-medium text-gray-700 mb-1";
@@ -128,6 +135,7 @@ export default function CustomSpellForm({
   initialValues,
   onSubmit,
   onCancel,
+  onDelete,
 }: CustomSpellFormProps) {
   const [form, setForm] = useState<FormData>(
     initialValues ? spellToForm(initialValues) : EMPTY_FORM,
@@ -191,7 +199,9 @@ export default function CustomSpellForm({
                 name: form.damage_type,
                 url: "",
               },
-              damage_at_slot_level: {},
+              damage_at_slot_level: form.damage_dice
+                ? { custom: form.damage_dice.trim() }
+                : {},
               damage_at_character_level: {},
             }
           : (undefined as unknown as SpellDetail["damage"]),
@@ -373,25 +383,37 @@ export default function CustomSpellForm({
         />
       </div>
 
-      {/* Damage type */}
-      <div className={sectionClass}>
-        <label className={labelClass}>Damage type</label>
-        <Select
-          value={form.damage_type}
-          onValueChange={(v) => set("damage_type", v === "none" ? "" : v)}
-        >
-          <SelectTrigger className="w-full">
-            <SelectValue placeholder="None" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="none">None</SelectItem>
-            {DAMAGE_TYPES.map((d) => (
-              <SelectItem key={d} value={d}>
-                {d}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+      {/* Damage type + dice */}
+      <div className="grid grid-cols-2 gap-3">
+        <div className={sectionClass}>
+          <label className={labelClass}>Damage type</label>
+          <Select
+            value={form.damage_type}
+            onValueChange={(v) => set("damage_type", v === "none" ? "" : v)}
+          >
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="None" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="none">None</SelectItem>
+              {DAMAGE_TYPES.map((d) => (
+                <SelectItem key={d} value={d}>
+                  {d}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        {form.damage_type && (
+          <div className={sectionClass}>
+            <label className={labelClass}>Damage dice</label>
+            <Input
+              value={form.damage_dice}
+              onChange={(e) => set("damage_dice", e.target.value)}
+              placeholder="2d8"
+            />
+          </div>
+        )}
       </div>
 
       {/* Area of effect */}
@@ -484,6 +506,17 @@ export default function CustomSpellForm({
           {initialValues ? "Save changes" : "Add to Pocket"}
         </button>
       </div>
+
+      {/* Delete — only shown when editing */}
+      {onDelete && (
+        <button
+          type="button"
+          onClick={onDelete}
+          className="w-full rounded-md border border-rose-200 py-2 text-sm font-medium text-rose-500 hover:bg-rose-50"
+        >
+          Delete spell
+        </button>
+      )}
     </form>
   );
 }

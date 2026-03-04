@@ -103,6 +103,14 @@ export default function PocketScreen({
     setEditingSpell(undefined);
   }
 
+  function handleDelete() {
+    if (editingSpell) {
+      onDeleteCustomSpell(editingSpell.index);
+      setSheetOpen(false);
+      setEditingSpell(undefined);
+    }
+  }
+
   // Empty pocket (no API spells pocketed and no custom spells)
   if (allSpells.length === 0) {
     return (
@@ -124,6 +132,7 @@ export default function PocketScreen({
                 initialValues={editingSpell}
                 onSubmit={handleFormSubmit}
                 onCancel={() => setSheetOpen(false)}
+                onDelete={editingSpell ? handleDelete : undefined}
               />
             </div>
           </SheetContent>
@@ -217,11 +226,6 @@ export default function PocketScreen({
                     isInPocket={isInPocket(spell.index)}
                     onTogglePocket={spell.custom ? undefined : onTogglePocket}
                     onEdit={spell.custom ? () => openEdit(spell) : undefined}
-                    onDelete={
-                      spell.custom
-                        ? () => onDeleteCustomSpell(spell.index)
-                        : undefined
-                    }
                   />
                 </li>
               ))}
@@ -247,6 +251,7 @@ export default function PocketScreen({
               initialValues={editingSpell}
               onSubmit={handleFormSubmit}
               onCancel={() => setSheetOpen(false)}
+              onDelete={editingSpell ? handleDelete : undefined}
             />
           </div>
         </SheetContent>

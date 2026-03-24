@@ -5,7 +5,7 @@ import SpellCardDetails from "./SpellCardDetails";
 import { useState } from "react";
 import ConcentrationIcon from "./ui/ConcentrationIcon";
 import RitualIcon from "./ui/RitualIcon copy";
-import { BookMarked, Bookmark, Wand2, Pencil } from "lucide-react";
+import { Bookmark, Pencil } from "lucide-react";
 
 export default function SpellCard(
   spell: SpellDetail & {

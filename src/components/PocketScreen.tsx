@@ -224,6 +224,7 @@ export default function PocketScreen({
                 <li key={spell.index}>
                   <SpellCard
                     {...spell}
+                    selectedClass={undefined}
                     isInPocket={isInPocket(spell.index)}
                     onTogglePocket={spell.custom ? undefined : onTogglePocket}
                     onEdit={spell.custom ? () => openEdit(spell) : undefined}

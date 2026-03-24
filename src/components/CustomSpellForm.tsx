@@ -69,6 +69,7 @@ type FormData = {
   aoe_type: string;
   aoe_size: string;
   saving_throw: string;
+  dc_success: string;
   classes: string[];
 };
 
@@ -89,6 +90,7 @@ const EMPTY_FORM: FormData = {
   aoe_type: "",
   aoe_size: "",
   saving_throw: "",
+  dc_success: "",
   classes: [],
 };
 
@@ -115,6 +117,7 @@ function spellToForm(spell: SpellDetail): FormData {
       ? String(spell.area_of_effect.size)
       : "",
     saving_throw: spell.dc?.dc_type?.index?.toUpperCase() ?? "",
+    dc_success: spell.dc?.dc_success ?? "",
     classes: spell.classes?.map((c) => c.name) ?? [],
   };
 }
@@ -216,7 +219,7 @@ export default function CustomSpellForm({
                 name: form.saving_throw,
                 url: "",
               },
-              dc_success: "none",
+              dc_success: form.dc_success,
               desc: "",
             }
           : (undefined as unknown as SpellDetail["dc"]),
@@ -471,6 +474,26 @@ export default function CustomSpellForm({
           </SelectContent>
         </Select>
       </div>
+
+      {/* DC Success - kun vist hvis saving throw er valgt */}
+      {form.saving_throw && (
+        <div className={sectionClass}>
+          <label className={labelClass}>DC Success</label>
+          <Select
+            value={form.dc_success}
+            onValueChange={(v) => set("dc_success", v)}
+          >
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Select outcome..." />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="none">None</SelectItem>
+              <SelectItem value="half">Half damage</SelectItem>
+              <SelectItem value="other">Other</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      )}
 
       {/* Classes */}
       <div className={sectionClass}>

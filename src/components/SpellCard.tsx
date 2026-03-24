@@ -5,7 +5,7 @@ import SpellCardDetails from "./SpellCardDetails";
 import { useState } from "react";
 import ConcentrationIcon from "./ui/ConcentrationIcon";
 import RitualIcon from "./ui/RitualIcon copy";
-import { BookMarked, Bookmark, Wand2, Pencil } from "lucide-react";
+import { Bookmark, Pencil } from "lucide-react";
 
 export default function SpellCard(
   spell: SpellDetail & {
@@ -100,47 +100,53 @@ export default function SpellCard(
         </div>
 
         <div className="flex items-center gap-2">
-          <div className="flex h-5 w-5 items-center justify-center rounded-full bg-linear-to-br from-slate-700 to-gray-900">
-            <p className="text-xs font-bold text-white">{spell.level}</p>
-          </div>
-
           {/* Custom spell: wand icon + edit + delete */}
           {spell.custom && (
-            <div className="flex items-center gap-1">
-              <Wand2 className="h-4 w-4 fill-violet-400 text-violet-500" />
-              {spell.onEdit && (
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    spell.onEdit!();
-                  }}
-                  className="text-muted-foreground transition-colors hover:text-violet-500"
-                  aria-label="Edit spell"
-                >
-                  <Pencil className="h-4 w-4" />
-                </button>
-              )}
-            </div>
+            <>
+              <div className="flex items-center gap-1">
+                {spell.onEdit && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      spell.onEdit!();
+                    }}
+                    className="text-muted-foreground transition-colors hover:text-violet-500"
+                    aria-label="Edit spell"
+                  >
+                    <Pencil className="h-4 w-4" />
+                  </button>
+                )}
+              </div>
+              <div className="flex h-5 w-5 items-center justify-center rounded-full bg-linear-to-br from-slate-700 to-gray-900">
+                <p className="text-xs font-bold text-white">{spell.level}</p>
+              </div>
+              <Bookmark className="h-4 w-4 fill-slate-200 text-slate-300" />
+            </>
           )}
 
           {/* API spell: bookmark toggle */}
           {!spell.custom && spell.onTogglePocket && (
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                spell.onTogglePocket!(spell);
-              }}
-              className="text-muted-foreground transition-colors hover:text-rose-500"
-              aria-label={
-                spell.isInPocket ? "Remove from pocket" : "Add to pocket"
-              }
-            >
-              {spell.isInPocket ? (
-                <BookMarked className="h-4 w-4 fill-rose-500 text-rose-500" />
-              ) : (
-                <Bookmark className="h-4 w-4" />
-              )}
-            </button>
+            <>
+              <div className="flex h-5 w-5 items-center justify-center rounded-full bg-linear-to-br from-slate-700 to-gray-900">
+                <p className="text-xs font-bold text-white">{spell.level}</p>
+              </div>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  spell.onTogglePocket!(spell);
+                }}
+                className="text-muted-foreground transition-colors hover:text-rose-500"
+                aria-label={
+                  spell.isInPocket ? "Remove from pocket" : "Add to pocket"
+                }
+              >
+                {spell.isInPocket ? (
+                  <Bookmark className="h-4 w-4 fill-rose-500 text-rose-600" />
+                ) : (
+                  <Bookmark className="h-4 w-4" />
+                )}
+              </button>
+            </>
           )}
         </div>
       </div>

@@ -9,10 +9,11 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { usePocket } from "./hooks/usePocket";
 import { useCustomSpells } from "./hooks/useCustomSpells";
 import { useSwipeable } from "react-swipeable";
+import TrackScreen from "./components/TrackScreen";
 
 const queryClient = new QueryClient();
 
-const TABS = ["spells", "pocket"] as const;
+const TABS = ["spells", "pocket", "track"] as const;
 type Tab = (typeof TABS)[number];
 
 function App() {
@@ -41,7 +42,7 @@ function App() {
       <SplashScreen onDone={handleSplashDone} />
 
       <div
-        className={`flex h-[100dvh] flex-col ${splashDone ? "app-fade-in" : "opacity-0"}`}
+        className={`flex h-dvh flex-col ${splashDone ? "app-fade-in" : "opacity-0"}`}
       >
         {/* Header */}
         <div className="flex h-12 shrink-0 flex-row items-center gap-4 bg-white p-2">
@@ -53,17 +54,21 @@ function App() {
         <div className="min-h-0 flex-1 overflow-hidden" {...swipeHandlers}>
           <div
             className={`flex h-full transition-transform duration-200 ease-in-out ${
-              activeTab === "spells" ? "translate-x-0" : "-translate-x-1/2"
+              activeTab === "spells"
+                ? "translate-x-0"
+                : activeTab === "pocket"
+                  ? "-translate-x-1/3"
+                  : "-translate-x-2/3"
             }`}
-            style={{ width: "200%" }}
+            style={{ width: "300%" }}
           >
-            <div className="w-1/2 min-w-0 overflow-y-auto">
+            <div className="w-1/3 min-w-0 overflow-y-auto">
               <SpellsList
                 isInPocket={isInPocket}
                 onTogglePocket={togglePocket}
               />
             </div>
-            <div className="w-1/2 min-w-0 overflow-y-auto">
+            <div className="w-1/3 min-w-0 overflow-y-auto">
               <PocketScreen
                 pocketedSpells={pocketedSpells}
                 isInPocket={isInPocket}
@@ -73,6 +78,9 @@ function App() {
                 onUpdateCustomSpell={updateCustomSpell}
                 onDeleteCustomSpell={deleteCustomSpell}
               />
+            </div>
+            <div className="w-1/3 min-w-0 overflow-y-auto">
+              <TrackScreen />
             </div>
           </div>
         </div>

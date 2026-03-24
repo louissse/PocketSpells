@@ -5,7 +5,12 @@ import SpellCardDetails from "./SpellCardDetails";
 import { useState } from "react";
 import ConcentrationIcon from "./ui/ConcentrationIcon";
 import RitualIcon from "./ui/RitualIcon copy";
-import { Bookmark, Pencil } from "lucide-react";
+import { Bookmark, Pencil, ChevronUp } from "lucide-react";
+
+// Check if a spell can be upcast (has damage scaling at higher slot levels)
+function canUpcast(spell: SpellDetail): boolean {
+  return !!spell?.higher_level?.length;
+}
 
 export default function SpellCard(
   spell: SpellDetail & {
@@ -117,8 +122,16 @@ export default function SpellCard(
                   </button>
                 )}
               </div>
-              <div className="flex h-5 w-5 items-center justify-center rounded-full bg-linear-to-br from-slate-700 to-gray-900">
-                <p className="text-xs font-bold text-white">{spell.level}</p>
+              <div className="relative">
+                <div className="flex h-5 w-5 items-center justify-center rounded-full bg-linear-to-br from-slate-700 to-gray-900">
+                  <p className="text-xs font-bold text-white">{spell.level}</p>
+                </div>
+                {canUpcast(spell) && (
+                  <ChevronUp
+                    strokeWidth={5}
+                    className="absolute -right-1 -bottom-1 h-3 w-3 text-pink-500"
+                  />
+                )}
               </div>
               <Bookmark className="h-4 w-4 fill-slate-200 text-slate-300" />
             </>
@@ -127,15 +140,23 @@ export default function SpellCard(
           {/* API spell: bookmark toggle */}
           {!spell.custom && spell.onTogglePocket && (
             <>
-              <div className="flex h-5 w-5 items-center justify-center rounded-full bg-linear-to-br from-slate-700 to-gray-900">
-                <p className="text-xs font-bold text-white">{spell.level}</p>
+              <div className="relative">
+                <div className="flex h-5 w-5 items-center justify-center rounded-full bg-linear-to-br from-slate-700 to-gray-900">
+                  <p className="text-xs font-bold text-white">{spell.level}</p>
+                </div>
+                {canUpcast(spell) && (
+                  <ChevronUp
+                    strokeWidth={5}
+                    className="absolute -right-1 -bottom-1 h-3 w-3 text-pink-500"
+                  />
+                )}
               </div>
               <button
                 onClick={(e) => {
                   e.stopPropagation();
                   spell.onTogglePocket!(spell);
                 }}
-                className="text-muted-foreground transition-colors hover:text-rose-500"
+                className="text-muted-foreground transition-colors hover:text-pink-500"
                 aria-label={
                   spell.isInPocket ? "Remove from pocket" : "Add to pocket"
                 }

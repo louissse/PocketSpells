@@ -64,6 +64,7 @@ type FormData = {
   components: string[];
   material: string;
   desc: string;
+  higher_level: string;
   damage_type: string;
   damage_dice: string;
   aoe_type: string;
@@ -85,6 +86,7 @@ const EMPTY_FORM: FormData = {
   components: [],
   material: "",
   desc: "",
+  higher_level: "",
   damage_type: "",
   damage_dice: "",
   aoe_type: "",
@@ -107,6 +109,7 @@ function spellToForm(spell: SpellDetail): FormData {
     components: spell.components ?? [],
     material: spell.material ?? "",
     desc: spell.desc?.join("\n\n") ?? "",
+    higher_level: spell.higher_level?.join("\n\n") ?? "",
     damage_type: spell.damage?.damage_type?.name ?? "",
     damage_dice:
       Object.values(spell.damage?.damage_at_slot_level ?? {})[0] ??
@@ -193,7 +196,9 @@ export default function CustomSpellForm({
         components: form.components,
         material: form.material.trim(),
         desc: form.desc.trim() ? form.desc.trim().split("\n\n") : [],
-        higher_level: [],
+        higher_level: form.higher_level.trim()
+          ? form.higher_level.trim().split("\n\n")
+          : [],
         attack_type: "",
         damage: form.damage_type
           ? {
@@ -383,6 +388,17 @@ export default function CustomSpellForm({
           value={form.desc}
           onChange={(e) => set("desc", e.target.value)}
           placeholder="Describe the spell effect..."
+        />
+      </div>
+
+      {/* Higher levels */}
+      <div className={sectionClass}>
+        <label className={labelClass}>At Higher Levels</label>
+        <Textarea
+          className="min-h-16 resize-y"
+          value={form.higher_level}
+          onChange={(e) => set("higher_level", e.target.value)}
+          placeholder="What happens when cast at higher spell levels..."
         />
       </div>
 

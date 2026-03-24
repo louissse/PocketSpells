@@ -1,6 +1,6 @@
-import { Sparkles, BookMarked } from "lucide-react";
+import { Sparkles, BookMarked, CircleCheckBig } from "lucide-react";
 
-type Tab = "spells" | "pocket";
+type Tab = "spells" | "pocket" | "track";
 
 interface BottomNavProps {
   activeTab: Tab;
@@ -14,6 +14,7 @@ const tabs: {
 }[] = [
   { id: "spells", label: "Spells", icon: Sparkles },
   { id: "pocket", label: "Pocket", icon: BookMarked },
+  { id: "track", label: "Track", icon: CircleCheckBig },
 ];
 
 export default function BottomNav({ activeTab, onTabChange }: BottomNavProps) {

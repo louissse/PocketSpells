@@ -179,9 +179,23 @@
 @keyframes splash-logo-to-corner {
   to {
     top: 0.5rem;
-    left: 0.5rem;
+    left: calc(
+      50% - 250px + 0.5rem
+    ); /* Center minus half app width plus padding */
     width: 2rem;
     height: 2rem;
+  }
+}
+
+/* Fallback for smaller screens */
+@media (max-width: 500px) {
+  @keyframes splash-logo-to-corner {
+    to {
+      top: 0.5rem;
+      left: 0.5rem;
+      width: 2rem;
+      height: 2rem;
+    }
   }
 }
 

@@ -40,7 +40,7 @@ export default function SplashScreen({ onDone }: SplashScreenProps) {
 
   return (
     <div
-      className={`fixed inset-0 z-50 flex flex-col items-center justify-center bg-stone-50 ${
+      className={`fixed inset-0 z-50 mx-auto flex max-w-[500px] flex-col items-center justify-center bg-stone-50 ${
         isTransitioning ? "splash-overlay-animate" : ""
       }`}
     >

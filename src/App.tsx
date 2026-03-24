@@ -45,7 +45,7 @@ function App() {
         className={`mx-auto flex h-dvh max-w-[500px] flex-col bg-stone-50 ${splashDone ? "app-fade-in" : "opacity-0"}`}
       >
         {/* Header */}
-        <div className="flex h-12 shrink-0 flex-row items-center gap-4 bg-white p-2">
+        <div className="flex h-12 shrink-0 flex-row items-center gap-4 bg-stone-50 p-2">
           <div className="h-8 w-8 rounded-full bg-linear-to-br from-rose-400 to-pink-600"></div>
           <h1 className="text-xl font-semibold">Pocket Spells</h1>
         </div>

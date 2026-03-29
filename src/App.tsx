@@ -10,6 +10,7 @@ import { usePocket } from "./hooks/usePocket";
 import { useCustomSpells } from "./hooks/useCustomSpells";
 import { useSwipeable } from "react-swipeable";
 import TrackScreen from "./components/TrackScreen";
+import { Analytics } from "@vercel/analytics/react";
 
 const queryClient = new QueryClient();
 
@@ -90,6 +91,7 @@ function App() {
       </div>
 
       <ReactQueryDevtools />
+      <Analytics />
     </QueryClientProvider>
   );
 }

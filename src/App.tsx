@@ -1,6 +1,6 @@
 import "./App.css";
 import { useState, useCallback } from "react";
-import SpellsList from "./components/SpellsList";
+import SpellCatalogScreen from "./components/SpellCatalogScreen";
 import SplashScreen from "./components/SplashScreen";
 import BottomNav from "./components/BottomNav";
 import PocketScreen from "./components/PocketScreen";
@@ -64,7 +64,7 @@ function App() {
             style={{ width: "300%" }}
           >
             <div className="w-1/3 min-w-0 overflow-y-auto">
-              <SpellsList
+              <SpellCatalogScreen
                 isInPocket={isInPocket}
                 onTogglePocket={togglePocket}
               />

@@ -1,6 +1,5 @@
-import { useState, useRef, useEffect, useMemo } from "react";
-import { useSpellsList } from "../hooks/useSpellsList";
-import { useInfiniteSpellDetails } from "../hooks/useSpellDetails";
+import { useState, useRef, useEffect } from "react";
+import { useSpellCatalog } from "../hooks/useSpellCatalog";
 import SpellCard, { SpellCardSkeleton } from "./SpellCard";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import {
@@ -10,55 +9,33 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import Fuse from "fuse.js";
 import type { SpellDetail } from "../types/spell";
 
-interface SpellsListProps {
+interface SpellCatalogScreenProps {
   isInPocket: (index: string) => boolean;
   onTogglePocket: (spell: SpellDetail) => void;
 }
 
-export default function SpellsList({
+export default function SpellCatalogScreen({
   isInPocket,
   onTogglePocket,
-}: SpellsListProps) {
+}: SpellCatalogScreenProps) {
   const [levelSelect, setLevelSelect] = useState<string[]>([]);
   const [classSelect, setClassSelect] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
-  const { allSpells, loading: spellsLoading } = useSpellsList(
-    levelSelect,
-    classSelect,
-  );
-
-  // Configure Fuse.js for searching spell names only
-  const fuse = useMemo(() => {
-    if (!allSpells.length) return null;
-
-    return new Fuse(allSpells, {
-      keys: ["name"], // Only search in spell names
-      threshold: 0.3, // Adjust for fuzzy matching sensitivity
-      includeScore: true,
-    });
-  }, [allSpells]);
-
-  // Filter spells based on search query
-  const filteredSpells = useMemo(() => {
-    if (!searchQuery.trim()) return allSpells;
-    if (!fuse) return [];
-
-    const results = fuse.search(searchQuery);
-    return results.map((result) => result.item);
-  }, [allSpells, fuse, searchQuery]);
-
   const {
     spellDetails,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-    isLoading: detailsLoading,
+    loading,
     isError,
     error,
-  } = useInfiniteSpellDetails(filteredSpells);
+  } = useSpellCatalog({
+    levels: levelSelect,
+    className: classSelect,
+    searchQuery,
+  });
 
   const loadMoreRef = useRef<HTMLDivElement>(null);
 
@@ -86,8 +63,6 @@ export default function SpellsList({
       observer.unobserve(loadMoreElement);
     };
   }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
-
-  const loading = spellsLoading || detailsLoading;
 
   if (isError) {
     return (

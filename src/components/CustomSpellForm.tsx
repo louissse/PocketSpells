@@ -1,5 +1,19 @@
 import { useState } from "react";
 import type { SpellDetail } from "../types/spell";
+import {
+  CUSTOM_SPELL_AOE_TYPES,
+  CUSTOM_SPELL_CLASSES,
+  CUSTOM_SPELL_DAMAGE_TYPES,
+  CUSTOM_SPELL_SAVING_THROWS,
+  CUSTOM_SPELL_SCHOOLS,
+  createEmptyCustomSpellDraft,
+  customSpellDraftToSpellInput,
+  customSpellToDraft,
+  validateCustomSpellDraft,
+  type CustomSpellDraft,
+  type CustomSpellDraftErrors,
+  type CustomSpellInput,
+} from "../lib/customSpellDraft";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -10,126 +24,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-const SCHOOLS = [
-  "Abjuration",
-  "Conjuration",
-  "Divination",
-  "Enchantment",
-  "Evocation",
-  "Illusion",
-  "Necromancy",
-  "Transmutation",
-];
-
-const DAMAGE_TYPES = [
-  "Acid",
-  "Bludgeoning",
-  "Cold",
-  "Fire",
-  "Force",
-  "Lightning",
-  "Necrotic",
-  "Piercing",
-  "Poison",
-  "Psychic",
-  "Radiant",
-  "Slashing",
-  "Thunder",
-];
-
-const SAVING_THROWS = ["STR", "DEX", "CON", "INT", "WIS", "CHA"];
-
-const AOE_TYPES = ["Sphere", "Cube", "Cone", "Line", "Cylinder"];
-
-const CLASSES = [
-  "Bard",
-  "Cleric",
-  "Druid",
-  "Paladin",
-  "Ranger",
-  "Sorcerer",
-  "Warlock",
-  "Wizard",
-];
-
-type FormData = {
-  name: string;
-  level: number;
-  school: string;
-  casting_time: string;
-  duration: string;
-  range: string;
-  concentration: boolean;
-  ritual: boolean;
-  components: string[];
-  material: string;
-  desc: string;
-  higher_level: string;
-  damage_type: string;
-  damage_dice: string;
-  aoe_type: string;
-  aoe_size: string;
-  saving_throw: string;
-  dc_success: string;
-  classes: string[];
-};
-
-const EMPTY_FORM: FormData = {
-  name: "",
-  level: 1,
-  school: "Evocation",
-  casting_time: "1 action",
-  duration: "Instantaneous",
-  range: "",
-  concentration: false,
-  ritual: false,
-  components: [],
-  material: "",
-  desc: "",
-  higher_level: "",
-  damage_type: "",
-  damage_dice: "",
-  aoe_type: "",
-  aoe_size: "",
-  saving_throw: "",
-  dc_success: "",
-  classes: [],
-};
-
-function spellToForm(spell: SpellDetail): FormData {
-  return {
-    name: spell.name,
-    level: spell.level,
-    school: spell.school.name,
-    casting_time: spell.casting_time,
-    duration: spell.duration,
-    range: spell.range,
-    concentration: spell.concentration,
-    ritual: spell.ritual,
-    components: spell.components ?? [],
-    material: spell.material ?? "",
-    desc: spell.desc?.join("\n\n") ?? "",
-    higher_level: spell.higher_level?.join("\n\n") ?? "",
-    damage_type: spell.damage?.damage_type?.name ?? "",
-    damage_dice:
-      Object.values(spell.damage?.damage_at_slot_level ?? {})[0] ??
-      Object.values(spell.damage?.damage_at_character_level ?? {})[0] ??
-      "",
-    aoe_type: spell.area_of_effect?.type ?? "",
-    aoe_size: spell.area_of_effect?.size
-      ? String(spell.area_of_effect.size)
-      : "",
-    saving_throw: spell.dc?.dc_type?.index?.toUpperCase() ?? "",
-    dc_success: spell.dc?.dc_success ?? "",
-    classes: spell.classes?.map((c) => c.name) ?? [],
-  };
-}
-
 interface CustomSpellFormProps {
   initialValues?: SpellDetail;
-  onSubmit: (
-    data: Omit<SpellDetail, "index" | "url" | "updated_at" | "custom">,
-  ) => void;
+  onSubmit: (data: CustomSpellInput) => void;
   onCancel: () => void;
   onDelete?: () => void;
 }
@@ -143,14 +40,17 @@ export default function CustomSpellForm({
   onCancel,
   onDelete,
 }: CustomSpellFormProps) {
-  const [form, setForm] = useState<FormData>(
-    initialValues ? spellToForm(initialValues) : EMPTY_FORM,
+  const [form, setForm] = useState<CustomSpellDraft>(
+    initialValues
+      ? customSpellToDraft(initialValues)
+      : createEmptyCustomSpellDraft(),
   );
-  const [errors, setErrors] = useState<Partial<Record<keyof FormData, string>>>(
-    {},
-  );
+  const [errors, setErrors] = useState<CustomSpellDraftErrors>({});
 
-  function set<K extends keyof FormData>(key: K, value: FormData[K]) {
+  function set<K extends keyof CustomSpellDraft>(
+    key: K,
+    value: CustomSpellDraft[K],
+  ) {
     setForm((prev) => ({ ...prev, [key]: value }));
     setErrors((prev) => ({ ...prev, [key]: undefined }));
   }
@@ -167,76 +67,13 @@ export default function CustomSpellForm({
     });
   }
 
-  function validate(): boolean {
-    const newErrors: Partial<Record<keyof FormData, string>> = {};
-    if (!form.name.trim()) newErrors.name = "Name is required";
-    if (!form.casting_time.trim())
-      newErrors.casting_time = "Casting time is required";
-    if (!form.duration.trim()) newErrors.duration = "Duration is required";
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  }
-
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!validate()) return;
+    const validation = validateCustomSpellDraft(form);
+    setErrors(validation.errors);
+    if (!validation.valid) return;
 
-    const schoolIndex = form.school.toLowerCase();
-
-    const spell: Omit<SpellDetail, "index" | "url" | "updated_at" | "custom"> =
-      {
-        name: form.name.trim(),
-        level: form.level,
-        school: { index: schoolIndex, name: form.school, url: "" },
-        casting_time: form.casting_time.trim(),
-        duration: form.duration.trim(),
-        range: form.range.trim(),
-        concentration: form.concentration,
-        ritual: form.ritual,
-        components: form.components,
-        material: form.material.trim(),
-        desc: form.desc.trim() ? form.desc.trim().split("\n\n") : [],
-        higher_level: form.higher_level.trim()
-          ? form.higher_level.trim().split("\n\n")
-          : [],
-        attack_type: "",
-        damage: form.damage_type
-          ? {
-              damage_type: {
-                index: form.damage_type.toLowerCase(),
-                name: form.damage_type,
-                url: "",
-              },
-              damage_at_slot_level: form.damage_dice
-                ? { custom: form.damage_dice.trim() }
-                : {},
-              damage_at_character_level: {},
-            }
-          : (undefined as unknown as SpellDetail["damage"]),
-        area_of_effect:
-          form.aoe_type && form.aoe_size
-            ? { type: form.aoe_type.toLowerCase(), size: Number(form.aoe_size) }
-            : (undefined as unknown as SpellDetail["area_of_effect"]),
-        dc: form.saving_throw
-          ? {
-              dc_type: {
-                index: form.saving_throw.toLowerCase(),
-                name: form.saving_throw,
-                url: "",
-              },
-              dc_success: form.dc_success,
-              desc: "",
-            }
-          : (undefined as unknown as SpellDetail["dc"]),
-        classes: form.classes.map((c) => ({
-          index: c.toLowerCase(),
-          name: c,
-          url: "",
-        })),
-        subclasses: [],
-      };
-
-    onSubmit(spell);
+    onSubmit(customSpellDraftToSpellInput(form));
   }
 
   return (
@@ -282,7 +119,7 @@ export default function CustomSpellForm({
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              {SCHOOLS.map((s) => (
+              {CUSTOM_SPELL_SCHOOLS.map((s) => (
                 <SelectItem key={s} value={s}>
                   {s}
                 </SelectItem>
@@ -415,7 +252,7 @@ export default function CustomSpellForm({
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="none">None</SelectItem>
-              {DAMAGE_TYPES.map((d) => (
+              {CUSTOM_SPELL_DAMAGE_TYPES.map((d) => (
                 <SelectItem key={d} value={d}>
                   {d}
                 </SelectItem>
@@ -448,7 +285,7 @@ export default function CustomSpellForm({
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="none">None</SelectItem>
-              {AOE_TYPES.map((a) => (
+              {CUSTOM_SPELL_AOE_TYPES.map((a) => (
                 <SelectItem key={a} value={a}>
                   {a}
                 </SelectItem>
@@ -482,7 +319,7 @@ export default function CustomSpellForm({
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="none">None</SelectItem>
-            {SAVING_THROWS.map((s) => (
+            {CUSTOM_SPELL_SAVING_THROWS.map((s) => (
               <SelectItem key={s} value={s}>
                 {s}
               </SelectItem>
@@ -515,7 +352,7 @@ export default function CustomSpellForm({
       <div className={sectionClass}>
         <label className={labelClass}>Classes</label>
         <div className="flex flex-wrap gap-3">
-          {CLASSES.map((c) => (
+          {CUSTOM_SPELL_CLASSES.map((c) => (
             <label key={c} className="flex items-center gap-2 text-sm">
               <input
                 type="checkbox"

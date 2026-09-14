@@ -19,7 +19,7 @@ export interface SpellDetail {
   casting_time: string;
   level: number;
   attack_type: string;
-  damage: {
+  damage?: {
     damage_type: {
       index: string;
       name: string;
@@ -28,11 +28,11 @@ export interface SpellDetail {
     damage_at_slot_level: Record<string, string>;
     damage_at_character_level: Record<string, string>;
   };
-  area_of_effect: {
+  area_of_effect?: {
     type: string;
     size: number;
   };
-  dc: {
+  dc?: {
     dc_type: {
       index: string;
       name: string;

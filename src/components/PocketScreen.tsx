@@ -2,6 +2,7 @@ import { useState, useMemo } from "react";
 import { BookMarked, Plus } from "lucide-react";
 import Fuse from "fuse.js";
 import type { SpellDetail } from "../types/spell";
+import type { CustomSpellInput } from "../lib/customSpellDraft";
 import SpellCard from "./SpellCard";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import {
@@ -17,9 +18,7 @@ interface PocketScreenProps {
   isInPocket: (index: string) => boolean;
   onTogglePocket: (spell: SpellDetail) => void;
   customSpells: SpellDetail[];
-  onAddCustomSpell: (
-    spell: Omit<SpellDetail, "index" | "url" | "updated_at" | "custom">,
-  ) => SpellDetail;
+  onAddCustomSpell: (spell: CustomSpellInput) => SpellDetail;
   onUpdateCustomSpell: (spell: SpellDetail) => void;
   onDeleteCustomSpell: (index: string) => void;
 }
@@ -92,7 +91,7 @@ export default function PocketScreen({
   }
 
   function handleFormSubmit(
-    data: Omit<SpellDetail, "index" | "url" | "updated_at" | "custom">,
+    data: CustomSpellInput,
   ) {
     if (editingSpell) {
       onUpdateCustomSpell({ ...editingSpell, ...data });

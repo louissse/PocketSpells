@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import type { SpellDetail } from "../types/spell";
+import type { CustomSpellInput } from "../lib/customSpellDraft";
 
 const STORAGE_KEY = "custom-spells";
 
@@ -21,7 +22,7 @@ export function useCustomSpells() {
   }, [customSpells]);
 
   const addCustomSpell = useCallback(
-    (spell: Omit<SpellDetail, "index" | "url" | "updated_at" | "custom">) => {
+    (spell: CustomSpellInput) => {
       const newSpell: SpellDetail = {
         ...spell,
         index: `custom-${Date.now()}`,
